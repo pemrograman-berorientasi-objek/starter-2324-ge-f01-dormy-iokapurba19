@@ -56,13 +56,25 @@ public class App {
         entityManager.flush();
         entityManager.getTransaction().commit();
     }
-    private static void addStudent(String id, String nama, String tahun, String gender, String dorm){
+    private static void addStudent(String id, String nama, String tahun, String gender, String dorm) {
+        // Check for existing student using a more efficient query
+        TypedQuery<Long> query = entityManager.createQuery(
+                "SELECT COUNT(s) FROM Student s WHERE s.id = :id", Long.class);
+        query.setParameter("id", id);
+        long existingCount = (long) query.getSingleResult();
+    
+        if (existingCount == 0) {
+            // Create and persist new student if not found
             entityManager.getTransaction().begin();
             Student student = new Student(id, nama, tahun, gender, dorm);
             entityManager.persist(student);
             entityManager.flush();
             entityManager.getTransaction().commit();
+        } else {
+            System.out.println("Student with ID " + id + " already exists."); // Informative message
+        }
     }
+    
     private static void addDorm(String nama, String capacity, String gender){
         entityManager.getTransaction().begin();
         Dorm dorm = new Dorm(nama, capacity, gender);

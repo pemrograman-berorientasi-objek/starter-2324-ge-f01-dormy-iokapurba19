@@ -57,11 +57,11 @@ public class App {
         entityManager.getTransaction().commit();
     }
     private static void addStudent(String id, String nama, String tahun, String gender, String dorm){
-            entityManager.getTransaction().begin();
-            Student student = new Student(id, nama, tahun, gender, dorm);
-            entityManager.persist(student);
-            entityManager.flush();
-            entityManager.getTransaction().commit();
+        entityManager.getTransaction().begin();
+        Student student = new Student(id, nama, tahun, gender, dorm);
+        entityManager.persist(student);
+        entityManager.flush();
+        entityManager.getTransaction().commit();
     }
     private static void addDorm(String nama, String capacity, String gender){
         entityManager.getTransaction().begin();
@@ -70,32 +70,9 @@ public class App {
         entityManager.flush();
         entityManager.getTransaction().commit();
     }
-    // private static void assignStudent(String id, String asrama){
-    //     String jpql = "SELECT s FROM Student s WHERE s.id LIKE :nim";
-    //     TypedQuery<Student> query = entityManager.createQuery(jpql, Student.class);
-    //     query.setParameter("nim", id);
-    //     List<Student> Students = query.getResultList();
-    //     String tes = Students.toString();
-    //     int edge = tes.length();
-    //     String simpan = (tes.substring(1, edge-1));
-    //     String[] token = simpan.split("|");
-    //     for(int i =0; i < token.length; i++ ){
-    //         if(token[i].equals("|")){
-    //             token[i] = "\0";
-    //             token[i] = "#";
-    //         }
-    //     }
-    //     String rungkad = "";
-    //     for(int i =0; i < token.length; i++ ){
-    //         rungkad += token[i];
-    //     }
-    //     String[] capek = rungkad.split("#");
-    //     deleteStudent(id);
-    //     entityManager.flush();
-    //     entityManager.getTransaction().commit();
-    //     addStudent(capek[0], capek[1], capek[2], capek[3], asrama);
-    // }
     private static void assignStudent(String id, String asrama){
+        System.out.println("SENELU<");
+        displayAll();
         String jpql = "SELECT s FROM Student s WHERE s.id LIKE :nim";
         TypedQuery<Student> query = entityManager.createQuery(jpql, Student.class);
         query.setParameter("nim", id);
@@ -119,6 +96,17 @@ public class App {
         entityManager.flush();
         entityManager.getTransaction().commit();
         addStudent(capek[0], capek[1], capek[2], capek[3], asrama);
+    }
+    private static void updateStudent(String id, String asrama){
+        String jpql = "UPDATE Student d SET d.dorm = :asrama WHERE d.id = :nim";
+        entityManager.getTransaction().begin();
+        TypedQuery<Student> query = entityManager.createQuery(jpql, Student.class);
+        query.setParameter("asrama", asrama);
+        query.setParameter("nim", id);
+        query.executeUpdate();
+
+        entityManager.flush();
+        entityManager.getTransaction().commit();
     }
     private static void deleteStudent(String id){
         String jpql = "DELETE FROM Student c WHERE c.id = :nim";

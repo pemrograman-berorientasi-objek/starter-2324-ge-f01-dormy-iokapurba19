@@ -31,9 +31,12 @@ public class Dorm {
         this.capacity = capasity;
         this.gender = gender;
     }
+    public String getName(){
+        return this.name;
+    }
 
     @Override
     public String toString(){
-        return name+"|"+capacity+"|"+gender;
+        return name+"|"+gender+"|"+capacity;
     }
 }

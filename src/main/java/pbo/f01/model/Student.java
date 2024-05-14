@@ -30,21 +30,33 @@ public class Student {
     public Student(){
 
     }
-    public Student(String id, String name, String year, String gender){
+    public Student(String id, String name, String year, String gender, String dorm){
         this.id = id;
         this.name = name;
         this.year = year;
         this.gender = gender;
-        this.dorm = "";
+        this.dorm = dorm;
+    }
+    public String getId(){
+        return this.id;
+    }
+    public String getName(){
+        return this.name;
+    }
+    public String getYear(){
+        return this.year;
+    }
+    public String getGender(){
+        return this.gender;
     }
 
     @Override
     public String toString(){
-        if(this.dorm.equals("")){
-            return id+"|"+name+"|"+year+"|"+gender;
-        } else {
-            return id+"|"+name+"|"+year+"|"+gender+"|"+dorm;
-        }
+        return id+"|"+name+"|"+year+"|"+gender+"|"+dorm;
+        // if(this.dorm.equals("")){
+        //     return id+"|"+name+"|"+year+"|"+gender;
+        // } else {
+        // }
     }
     
 

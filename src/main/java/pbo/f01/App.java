@@ -108,29 +108,41 @@ public class App {
     //     addStudent(capek[0], capek[1], capek[2], capek[3], asrama);
     // }
     private static void assignStudent(String id, String asrama){
-        String jpql = "SELECT s FROM Student s WHERE s.id LIKE :nim";
-        TypedQuery<Student> query = entityManager.createQuery(jpql, Student.class);
-        query.setParameter("nim", id);
-        List<Student> Students = query.getResultList();
-        String tes = Students.toString();
-        int edge = tes.length();
-        String simpan = (tes.substring(1, edge-1));
-        String[] token = simpan.split("|");
-        for(int i =0; i < token.length; i++ ){
-            if(token[i].equals("|")){
-                token[i] = "\0";
-                token[i] = "#";
+        String Sjpql = "SELECT s FROM Student s WHERE s.id LIKE :nim";
+        TypedQuery<Student> Squery = entityManager.createQuery(Sjpql, Student.class);
+        Squery.setParameter("nim", id);
+        Boolean ada = true;
+        List<Student> students = Squery.getResultList();
+
+        if (students.isEmpty()) {
+            ada = false;
+        }
+        if(ada){
+            String jpql = "SELECT s FROM Student s WHERE s.id LIKE :nim";
+            TypedQuery<Student> query = entityManager.createQuery(jpql, Student.class);
+            query.setParameter("nim", id);
+            List<Student> Students = query.getResultList();
+            String tes = Students.toString();
+            int edge = tes.length();
+            String simpan = (tes.substring(1, edge-1));
+            String[] token = simpan.split("|");
+            for(int i =0; i < token.length; i++ ){
+                if(token[i].equals("|")){
+                    token[i] = "\0";
+                    token[i] = "#";
+                }
             }
+            String rungkad = "";
+            for(int i =0; i < token.length; i++ ){
+                rungkad += token[i];
+            }
+            String[] capek = rungkad.split("#");
+            deleteStudent(id);
+            entityManager.flush();
+            entityManager.getTransaction().commit();
+            addStudent(capek[0], capek[1], capek[2], capek[3], asrama);
+
         }
-        String rungkad = "";
-        for(int i =0; i < token.length; i++ ){
-            rungkad += token[i];
-        }
-        String[] capek = rungkad.split("#");
-        deleteStudent(id);
-        entityManager.flush();
-        entityManager.getTransaction().commit();
-        addStudent(capek[0], capek[1], capek[2], capek[3], asrama);
     }
     private static void deleteStudent(String id){
         String jpql = "DELETE FROM Student c WHERE c.id = :nim";

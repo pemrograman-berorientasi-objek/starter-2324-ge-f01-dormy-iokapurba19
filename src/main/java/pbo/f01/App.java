@@ -71,7 +71,7 @@ public class App {
             entityManager.flush();
             entityManager.getTransaction().commit();
         } else {
-            System.out.println("Student with ID " + id + " already exists."); // Informative message
+        
         }
     }
     
@@ -108,40 +108,83 @@ public class App {
     //     addStudent(capek[0], capek[1], capek[2], capek[3], asrama);
     // }
     private static void assignStudent(String id, String asrama){
-        String Sjpql = "SELECT s FROM Student s WHERE s.id LIKE :nim";
-        TypedQuery<Student> Squery = entityManager.createQuery(Sjpql, Student.class);
-        Squery.setParameter("nim", id);
-        Boolean ada = true;
-        List<Student> students = Squery.getResultList();
+        
 
-        if (students.isEmpty()) {
-            ada = false;
-        }
-        if(ada){
-            String jpql = "SELECT s FROM Student s WHERE s.id LIKE :nim";
-            TypedQuery<Student> query = entityManager.createQuery(jpql, Student.class);
-            query.setParameter("nim", id);
-            List<Student> Students = query.getResultList();
-            String tes = Students.toString();
-            int edge = tes.length();
-            String simpan = (tes.substring(1, edge-1));
-            String[] token = simpan.split("|");
-            for(int i =0; i < token.length; i++ ){
-                if(token[i].equals("|")){
-                    token[i] = "\0";
-                    token[i] = "#";
+        int index = 0;
+        String Qjpql = "SELECT s FROM Student s WHERE s.dorm LIKE :asrama";
+        TypedQuery<Student> _query = entityManager.createQuery(Qjpql, Student.class);
+        _query.setParameter("asrama", asrama);
+        List<Student> _Students = _query.getResultList();
+        _Students.sort((e1, e2) -> e1.getName().compareTo(e2.getName()));
+        for (Student s : _Students) {
+            index++;
+        }   
+
+        String Ajpql = "SELECT s.capacity FROM Dorm s WHERE s.name LIKE :asrama";
+        TypedQuery<Dorm> Query_ = entityManager.createQuery(Ajpql, Dorm.class);
+        Query_.setParameter("asrama", asrama);
+        List<Dorm> kapasitas = Query_.getResultList();
+        String pecah = kapasitas.toString();
+        int ujung = pecah.length();
+        String save = (pecah.substring(1, ujung-1));
+        int tersedia = Integer.parseInt(save);
+
+        if(index < tersedia){
+
+            String Fjpql = "SELECT s.gender FROM Student s WHERE s.id LIKE :id";
+            TypedQuery<Student> gender = entityManager.createQuery(Fjpql, Student.class);
+            gender.setParameter("id", id);
+            List<Student> JK = gender.getResultList();
+            String simpangender = JK.toString();
+            int ujunggender = simpangender.length();
+            String savegender = (simpangender.substring(1, ujunggender-1));
+
+            String Djpql = "SELECT s.gender FROM Dorm s WHERE s.name LIKE :asrama";
+            TypedQuery<Student> Dgender = entityManager.createQuery(Djpql, Student.class);
+            Dgender.setParameter("asrama", asrama);
+            List<Student> DJK = Dgender.getResultList();
+            String Dsimpangender = DJK.toString();
+            int Dujunggender = Dsimpangender.length();
+            String Dsavegender = (Dsimpangender.substring(1, Dujunggender-1));
+
+            if(savegender.equals(Dsavegender)){
+                String Sjpql = "SELECT s FROM Student s WHERE s.id LIKE :nim";
+                TypedQuery<Student> Squery = entityManager.createQuery(Sjpql, Student.class);
+                Squery.setParameter("nim", id);
+                Boolean ada = true;
+                List<Student> students = Squery.getResultList();
+        
+                if (students.isEmpty()) {
+                    ada = false;
                 }
+        
+                if(ada){
+                    String jpql = "SELECT s FROM Student s WHERE s.id LIKE :nim";
+                    TypedQuery<Student> query = entityManager.createQuery(jpql, Student.class);
+                    query.setParameter("nim", id);
+                    List<Student> Students = query.getResultList();
+                    String tes = Students.toString();
+                    int edge = tes.length();
+                    String simpan = (tes.substring(1, edge-1));
+                    String[] token = simpan.split("|");
+                    for(int i =0; i < token.length; i++ ){
+                        if(token[i].equals("|")){
+                            token[i] = "\0";
+                            token[i] = "#";
+                        }
+                    }
+                    String rungkad = "";
+                    for(int i =0; i < token.length; i++ ){
+                        rungkad += token[i];
+                    }
+                    String[] capek = rungkad.split("#");
+                    deleteStudent(id);
+                    entityManager.flush();
+                    entityManager.getTransaction().commit();
+                    addStudent(capek[0], capek[1], capek[2], capek[3], asrama);
+        
+                }     
             }
-            String rungkad = "";
-            for(int i =0; i < token.length; i++ ){
-                rungkad += token[i];
-            }
-            String[] capek = rungkad.split("#");
-            deleteStudent(id);
-            entityManager.flush();
-            entityManager.getTransaction().commit();
-            addStudent(capek[0], capek[1], capek[2], capek[3], asrama);
-
         }
     }
     private static void deleteStudent(String id){
@@ -155,13 +198,14 @@ public class App {
         String Djpql = "SELECT d FROM Dorm d ORDER BY d.name";
         List<Dorm> Dorms = entityManager.createQuery(Djpql, Dorm.class)
         .getResultList();
-        
+        Dorms.sort((d1, d2) -> d1.getName().compareTo(d2.getName()));
         for (Dorm d : Dorms) {
             int index = 0;
             String Sjpql = "SELECT s FROM Student s WHERE s.dorm LIKE :asrama";
             TypedQuery<Student> query = entityManager.createQuery(Sjpql, Student.class);
             query.setParameter("asrama", d.getName());
             List<Student> Students = query.getResultList();
+            Students.sort((e1, e2) -> e1.getName().compareTo(e2.getName()));
             for (Student s : Students) {
                 index++;
             }   

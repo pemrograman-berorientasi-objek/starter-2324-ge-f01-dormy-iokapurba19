@@ -76,7 +76,7 @@ public class Dorm {
 
     @Override
     public String toString() {
-        return name + "|" + capacity + "|" + gender;
+        return name + "|" + gender + "|" + capacity;
     }
 
 }

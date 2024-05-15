@@ -176,7 +176,7 @@ public class App {
             int index = Students.size();
             System.out.println(d+"|"+index);
             for (Student s : Students) {
-                System.out.println(s.getId()+"|"+s.getName()+"|"+s.getYear());
+                System.out.println(s.getid()+"|"+s.getName()+"|"+s.getyear());
             }   
         }
     }

@@ -1,5 +1,4 @@
 package pbo.f01;
-import java.sql.ResultSet;
 import java.util.*;
 
 import javax.persistence.EntityManager;
@@ -82,44 +81,14 @@ public class App {
         entityManager.flush();
         entityManager.getTransaction().commit();
     }
-    // private static void assignStudent(String id, String asrama){
-    //     String jpql = "SELECT s FROM Student s WHERE s.id LIKE :nim";
-    //     TypedQuery<Student> query = entityManager.createQuery(jpql, Student.class);
-    //     query.setParameter("nim", id);
-    //     List<Student> Students = query.getResultList();
-    //     String tes = Students.toString();
-    //     int edge = tes.length();
-    //     String simpan = (tes.substring(1, edge-1));
-    //     String[] token = simpan.split("|");
-    //     for(int i =0; i < token.length; i++ ){
-    //         if(token[i].equals("|")){
-    //             token[i] = "\0";
-    //             token[i] = "#";
-    //         }
-    //     }
-    //     String rungkad = "";
-    //     for(int i =0; i < token.length; i++ ){
-    //         rungkad += token[i];
-    //     }
-    //     String[] capek = rungkad.split("#");
-    //     deleteStudent(id);
-    //     entityManager.flush();
-    //     entityManager.getTransaction().commit();
-    //     addStudent(capek[0], capek[1], capek[2], capek[3], asrama);
-    // }
-    private static void assignStudent(String id, String asrama){
-        
 
-        int index = 0;
+    private static void assignStudent(String id, String asrama){
         String Qjpql = "SELECT s FROM Student s WHERE s.dorm LIKE :asrama";
         TypedQuery<Student> _query = entityManager.createQuery(Qjpql, Student.class);
         _query.setParameter("asrama", asrama);
         List<Student> _Students = _query.getResultList();
         _Students.sort((e1, e2) -> e1.getName().compareTo(e2.getName()));
-        for (Student s : _Students) {
-            index++;
-        }   
-
+        int index = _Students.size();
         String Ajpql = "SELECT s.capacity FROM Dorm s WHERE s.name LIKE :asrama";
         TypedQuery<Dorm> Query_ = entityManager.createQuery(Ajpql, Dorm.class);
         Query_.setParameter("asrama", asrama);
@@ -130,7 +99,6 @@ public class App {
         int tersedia = Integer.parseInt(save);
 
         if(index < tersedia){
-
             String Fjpql = "SELECT s.gender FROM Student s WHERE s.id LIKE :id";
             TypedQuery<Student> gender = entityManager.createQuery(Fjpql, Student.class);
             gender.setParameter("id", id);
@@ -173,15 +141,15 @@ public class App {
                             token[i] = "#";
                         }
                     }
-                    String rungkad = "";
+                    String split = "";
                     for(int i =0; i < token.length; i++ ){
-                        rungkad += token[i];
+                        split += token[i];
                     }
-                    String[] capek = rungkad.split("#");
+                    String[] result = split.split("#");
                     deleteStudent(id);
                     entityManager.flush();
                     entityManager.getTransaction().commit();
-                    addStudent(capek[0], capek[1], capek[2], capek[3], asrama);
+                    addStudent(result[0], result[1], result[2], result[3], asrama);
         
                 }     
             }
@@ -200,15 +168,12 @@ public class App {
         .getResultList();
         Dorms.sort((d1, d2) -> d1.getName().compareTo(d2.getName()));
         for (Dorm d : Dorms) {
-            int index = 0;
             String Sjpql = "SELECT s FROM Student s WHERE s.dorm LIKE :asrama";
             TypedQuery<Student> query = entityManager.createQuery(Sjpql, Student.class);
             query.setParameter("asrama", d.getName());
             List<Student> Students = query.getResultList();
             Students.sort((e1, e2) -> e1.getName().compareTo(e2.getName()));
-            for (Student s : Students) {
-                index++;
-            }   
+            int index = Students.size();
             System.out.println(d+"|"+index);
             for (Student s : Students) {
                 System.out.println(s.getId()+"|"+s.getName()+"|"+s.getYear());

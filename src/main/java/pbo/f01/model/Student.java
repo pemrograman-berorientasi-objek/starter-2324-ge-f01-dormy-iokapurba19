@@ -1,16 +1,13 @@
 package pbo.f01.model;
-
-
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+/**
+ * 12S22031 - Ioka Purba
+ * 12S22039 - Meilyna Hutajulu
+ */
 
 @Entity
 @Table(name = "Student")

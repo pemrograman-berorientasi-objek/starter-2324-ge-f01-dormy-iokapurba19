@@ -172,7 +172,7 @@ jobs:
           assign#12S21010#Mamre
           assign#12S21011#Mamre
           display-all
-          ---
+          --- 
         expected-output: |
           Kapernaum|male|5|4
           12S21001|Dhino Turnip|2021
